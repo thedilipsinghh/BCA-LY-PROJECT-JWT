@@ -1,40 +1,34 @@
 "use client"
+
 import { useResetPassMutation } from '@/app/redux/apis/auth.api'
-import { routerServerGlobal } from 'next/dist/server/lib/router-utils/router-server-context'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Router } from 'next/router'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 
 const ResetPassword = () => {
-    const [password, setpassword] = useState("")
+    const [password, setPassword] = useState("")
     const [cpassword, setCpassword] = useState("")
+
     const [resetPass, { isLoading }] = useResetPassMutation()
+
     const router = useRouter()
     const params = useSearchParams()
     const token = params.get("token")
 
-    console.log(token)
     const handleResetPass = async () => {
         try {
-            if (!token) {
-                toast.error("token is required")
-                return
-            }
-            if (password !== cpassword) {
-                toast.error("password and confirm password should match")
-                return
+            if (!token) return toast.error("token is required")
+            if (password !== cpassword) return toast.error("password mismatch")
 
-            }
-            await resetPass({ password, token: token as string }).unwrap()
+            await resetPass({ password, token }).unwrap()
+
             toast.success("password reset success")
             router.push("/login")
-        } catch (error) {
-            console.log(error)
+        } catch {
             toast.error("unable to process reset password")
-
         }
     }
+
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100 bg-light">
             <div className="card shadow p-4" style={{ maxWidth: "400px", width: "100%" }}>
@@ -53,7 +47,7 @@ const ResetPassword = () => {
                             type="password"
                             placeholder="Enter new password"
                             className="form-control"
-                            onChange={(e) => setpassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
 
