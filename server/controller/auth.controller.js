@@ -3,7 +3,7 @@ const User = require("../model/User.js")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const crypto = require("crypto")
-const differenceInSeconds = require("date-fns/differenceInSeconds")
+const { differenceInSeconds } = require("date-fns")
 
 const { sendEmail } = require("../utils/email.js")
 const { sendSMS } = require("../utils/sms.js")
@@ -138,8 +138,8 @@ exports.sendOTP = async (req, res) => {
             })
         })
 
-        if (user.mobile)
-            await sendSMS({ numbers: user.mobile, message: `Your OTP is ${otp}` })
+        // if (user.mobile)
+        //     await sendSMS({ numbers: user.mobile, message: `Your OTP is ${otp}` })
 
         res.status(200).json({ message: "OTP sent successfully" })
 
@@ -161,6 +161,8 @@ exports.verifyOTP = async (req, res) => {
             $or: [{ email: username }, { mobile: username }]
         })
 
+        const test = await bcrypt.compare(String(otp), user.otp)
+        console.log("Compare result:", test)
         if (!user || !user.otp)
             return res.status(401).json({ message: "OTP not requested" })
 
