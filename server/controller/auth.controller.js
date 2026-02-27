@@ -75,6 +75,7 @@ exports.login = async (req, res) => {
         res.cookie("USER", token, {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24,
+            semeSite: "none",
             secure: process.env.NODE_ENV === "production"
         })
 
@@ -178,7 +179,7 @@ exports.verifyOTP = async (req, res) => {
             expiresIn: "1d"
         })
 
-        res.cookie("USER", token, { httpOnly: true })
+        res.cookie("USER", token, { httpOnly: true, semeSite: "none", })
 
         await User.findByIdAndUpdate(user._id, { otp: null })
 
