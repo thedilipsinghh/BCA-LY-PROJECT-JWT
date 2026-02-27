@@ -14,9 +14,12 @@ mongoose.connect(process.env.MONGO_URL)
 app.use(express.json())
 
 app.use(cors({
-    origin: FRONTEND_URL,
+    origin: process.env.NODE_ENV === 'production'
+        ? 'https://bca-ly-project-jwt-client.vercel.app'
+        : 'http://localhost:3000',
     credentials: true
-}))
+}));
+
 
 // express-session is required by Passport for the OAuth handshake only.
 // The app itself is stateless (JWT cookies). Session data is not persisted.
