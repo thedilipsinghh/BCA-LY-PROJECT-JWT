@@ -280,6 +280,7 @@ const Login = () => {
             await signin(data).unwrap()
             toast.success("Login success")
             router.push("/admin")
+            router.refresh()
             reset()
         } catch {
             toast.error("Invalid credentials")
