@@ -23,14 +23,14 @@ app.use(cors({
 
 // express-session is required by Passport for the OAuth handshake only.
 // The app itself is stateless (JWT cookies). Session data is not persisted.
-app.use(session({
-    secret: process.env.SESSION_SECRET || process.env.JWT_KEY,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === "production" }
-}))
+// app.use(session({
+//     secret: process.env.SESSION_SECRET || process.env.JWT_KEY,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: { secure: process.env.NODE_ENV === "production" }
+// }))
 
-app.use(passport.initialize())
+// app.use(passport.initialize())
 
 app.use("/api/auth", require("./routes/auth.route.js"))
 app.use("/api/admin", require("./routes/admin.route.js"))

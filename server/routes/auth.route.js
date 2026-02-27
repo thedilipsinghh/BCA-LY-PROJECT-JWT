@@ -7,7 +7,7 @@ const router = require("express").Router()
 
 router
     .post("/signup", registerLimiter, register)
-    .post("/signin", loginLimiter, login)
+    .post("/signin", login)
     .post("/signout", logout)
     .post("/send-otp", otpLimiter, sendOTP)
     .post("/verify-otp", otpLimiter, verifyOTP)
