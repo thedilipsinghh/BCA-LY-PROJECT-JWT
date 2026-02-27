@@ -41,6 +41,7 @@ const Login = () => {
         } catch {
             toast.error("Invalid credentials")
         }
+        router.push("/admin")
     }
 
     // -----------------------
