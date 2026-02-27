@@ -35,13 +35,14 @@ const Login = () => {
             await signin(data).unwrap()
             toast.success("Login success")
             console.log("just now login ")
-            router.push("/admin")
+            { () => router.push("/admin") }
+
             console.log('hhhhhhhhhhhhh')
             reset()
         } catch {
-            toast.error("Invalid credentials")
+            toast.error("Invalid cred entials")
         }
-        router.push("/admin")
+        // router.push("/admin")
     }
 
     // -----------------------
