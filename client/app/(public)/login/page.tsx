@@ -36,6 +36,7 @@ const Login = () => {
             toast.success("Login success")
             console.log("just now login ")
             router.push("/admin")
+            console.log('hhhhhhhhhhhhh')
             reset()
         } catch {
             toast.error("Invalid credentials")
