@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const proxy = (req: NextRequest) => {
     // step 1 check for cookie
-    const token = req.cookies.get("USER")
+    const token = req.cookies.get("USER")?.value
     console.log(token);
 
     if (!token) {
