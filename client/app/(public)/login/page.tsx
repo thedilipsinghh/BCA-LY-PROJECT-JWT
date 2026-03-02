@@ -1,246 +1,3 @@
-// "use client"
-
-// import {
-//     useForgetPassMutation,
-//     useSendOTPMutation,
-//     useSigninMutation,
-//     useVerifyOTPMutation
-// } from "@/app/redux/apis/auth.api"
-
-// import { useForm } from "react-hook-form"
-// import { useState } from "react"
-// import { useRouter } from "next/navigation"
-// import { toast } from "react-toastify"
-// import { any } from "zod"
-// import { APP_URL } from "@/constant/config"
-
-// const Login = () => {
-//     const router = useRouter()
-
-//     const [mode, setMode] = useState("email") // "email" | "otp"
-//     const [username, setUsername] = useState("")
-
-//     const [signin] = useSigninMutation()
-//     const [forgetPass] = useForgetPassMutation()
-//     const [sendOTP, { isSuccess, isLoading }] = useSendOTPMutation()
-//     const [verifyOTP] = useVerifyOTPMutation()
-
-//     const { register, handleSubmit, reset } = useForm()
-
-//     // -----------------------
-//     // Email Login
-//     // -----------------------
-//     const handleEmailLogin = async (data: any) => {
-//         try {
-//             await signin(data).unwrap()
-//             toast.success("Login success")
-//             router.push("/admin")
-//             reset()
-//         } catch {
-//             toast.error("Invalid credentials")
-//         }
-//     }
-
-//     // -----------------------
-//     // OTP Login
-//     // -----------------------
-//     const handleOtpLogin = async (data: any) => {
-//         try {
-//             if (isSuccess) {
-//                 await verifyOTP(data).unwrap()
-//                 toast.success("OTP verified")
-//                 router.push("/admin")
-//             } else {
-//                 await sendOTP(data).unwrap()
-//                 toast.success("OTP sent")
-//             }
-//             reset()
-//         } catch {
-//             toast.error("OTP failed")
-//         }
-//     }
-
-//     // -----------------------
-//     // Forget password
-//     // -----------------------
-//     const handleForget = async () => {
-//         try {
-//             await forgetPass({ username }).unwrap()
-//             toast.success("Reset link sent")
-//         } catch {
-//             toast.error("Failed")
-//         }
-//     }
-
-//     return (
-//         <div className="container d-flex justify-content-center align-items-center min-vh-100 bg-light">
-
-//             <div className="card shadow p-4" style={{ maxWidth: 400, width: "100%" }}>
-
-//                 <h4 className="text-center fw-bold mb-4">
-//                     {mode === "email" ? "Login" : "Login with OTP"}
-//                 </h4>
-
-//                 {/* ---------------- EMAIL LOGIN ---------------- */}
-//                 {mode === "email" && (
-//                     <form onSubmit={handleSubmit(handleEmailLogin)}>
-//                         <input
-//                             {...register("email")}
-//                             type="email"
-//                             className="form-control mb-3"
-//                             placeholder="Email"
-//                         />
-
-//                         <input
-//                             {...register("password")}
-//                             type="password"
-//                             className="form-control mb-3"
-//                             placeholder="Password"
-//                         />
-
-//                         <button className="btn btn-primary w-100 mb-3">
-//                             Login
-//                         </button>
-
-//                         <div className="d-flex justify-content-between mb-3">
-//                             <button
-//                                 type="button"
-//                                 className="btn btn-outline-secondary btn-sm"
-//                                 onClick={() => setMode("otp")}
-//                             >
-//                                 Use OTP
-//                             </button>
-
-//                             <button
-//                                 type="button"
-//                                 className="btn btn-link btn-sm"
-//                                 data-bs-toggle="modal"
-//                                 data-bs-target="#forgetModal"
-//                             >
-//                                 Forgot?
-//                             </button>
-//                         </div>
-
-//                         {/* ── Google OAuth ── */}
-//                         <div className="text-center text-muted mb-2" style={{ fontSize: "0.85rem" }}>
-//                             or
-//                         </div>
-//                         <button
-//                             type="button"
-//                             className="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-2"
-//                             onClick={() => { window.location.href = `${APP_URL}/api/auth/google` }}
-//                         >
-//                             {/* Google "G" SVG icon */}
-//                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20" height="20">
-//                                 <path fill="#4285F4" d="M44.5 20H24v8.5h11.7C34.2 33.2 29.6 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.1-6.1C34.4 6.2 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.2-4z" />
-//                                 <path fill="#34A853" d="M6.3 14.7l7 5.1C15 16.1 19.2 13 24 13c3 0 5.7 1.1 7.8 2.9l6.1-6.1C34.4 6.2 29.5 4 24 4 16.1 4 9.3 8.5 6.3 14.7z" />
-//                                 <path fill="#FBBC05" d="M24 44c5.4 0 10.3-1.8 14.1-4.9l-6.5-5.3C29.5 35.6 26.9 36.5 24 36.5c-5.6 0-10.3-3.8-11.8-9l-7 5.4C8.5 39.4 15.7 44 24 44z" />
-//                                 <path fill="#EA4335" d="M44.5 20H24v8.5h11.7c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.3C41.8 36.4 44.5 30.7 44.5 24c0-1.3-.1-2.7-.2-4z" />
-//                             </svg>
-//                             Continue with Google
-//                         </button>
-//                     </form>
-//                 )}
-
-//                 {/* ---------------- OTP LOGIN ---------------- */}
-//                 {/* {mode === "otp" && (
-//                     <form onSubmit={handleSubmit(handleOtpLogin)}>
-
-//                         {isSuccess ? (
-//                             <input
-//                                 {...register("otp")}
-//                                 className="form-control mb-3"
-//                                 placeholder="Enter OTP"
-//                             />
-//                         ) : (
-//                             <input
-//                                 {...register("username")}
-//                                 className="form-control mb-3"
-//                                 placeholder="Email or Mobile"
-//                             />
-//                         )}
-
-//                         <button disabled={isLoading} className="btn btn-primary w-100 mb-3">
-//                             {isSuccess ? "Verify OTP" : "Send OTP"}
-//                         </button>
-
-//                         <button
-//                             type="button"
-//                             className="btn btn-outline-secondary w-100"
-//                             onClick={() => setMode("email")}
-//                         >
-//                             Back to Email Login
-//                         </button>
-//                     </form>
-//                 )} */}
-//                 {mode === "otp" && (
-//                     <form onSubmit={handleSubmit(handleOtpLogin)}>
-
-//                         {!isSuccess && (
-//                             <input
-//                                 {...register("username")}
-//                                 className="form-control mb-3"
-//                                 placeholder="Email or Mobile"
-//                             />
-//                         )}
-
-//                         {isSuccess && (
-//                             <input
-//                                 {...register("otp")}
-//                                 className="form-control mb-3"
-//                                 placeholder="Enter OTP"
-//                             />
-//                         )}
-
-//                         <button disabled={isLoading} className="btn btn-primary w-100 mb-3">
-//                             {isSuccess ? "Verify OTP" : "Send OTP"}
-//                         </button>
-
-//                         <button
-//                             type="button"
-//                             className="btn btn-outline-secondary w-100"
-//                             onClick={() => {
-//                                 setMode("email")
-//                                 reset()
-//                             }}
-//                         >
-//                             Back to Email Login
-//                         </button>
-//                     </form>
-//                 )}
-//             </div>
-
-//             {/* --------------- Forget Modal --------------- */}
-//             <div className="modal fade" id="forgetModal">
-//                 <div className="modal-dialog modal-dialog-centered">
-//                     <div className="modal-content p-3">
-
-//                         <h5 className="text-center mb-3">Reset Password</h5>
-
-//                         <input
-//                             className="form-control mb-3"
-//                             placeholder="Email or mobile"
-//                             onChange={(e) => setUsername(e.target.value)}
-//                         />
-
-//                         <button
-//                             className="btn btn-primary w-100"
-//                             onClick={handleForget}
-//                             data-bs-dismiss="modal"
-//                         >
-//                             Send Link
-//                         </button>
-
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
-
-// export default Login
-
-
 "use client"
 
 import {
@@ -254,75 +11,55 @@ import { useForm } from "react-hook-form"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
-import { APP_URL } from "@/constant/config"
 
 const Login = () => {
     const router = useRouter()
 
-    const [mode, setMode] = useState("email")
-
-    // 🔥 YOUR OWN STATE (NOT isSuccess nonsense)
+    const [mode, setMode] = useState<"email" | "otp" | "forget">("email")
     const [otpStep, setOtpStep] = useState(false)
     const [username, setUsername] = useState("")
 
-    const [signin] = useSigninMutation()
-    const [forgetPass] = useForgetPassMutation()
-    const [sendOTP] = useSendOTPMutation()
-    const [verifyOTP] = useVerifyOTPMutation()
+    const [signin, { isLoading: signing }] = useSigninMutation()
+    const [forgetPass, { isLoading: forgetting }] = useForgetPassMutation()
+    const [sendOTP, { isLoading: sendingOtp }] = useSendOTPMutation()
+    const [verifyOTP, { isLoading: verifying }] = useVerifyOTPMutation()
 
     const { register, handleSubmit, reset } = useForm()
 
-    // -----------------------
-    // Email Login
-    // -----------------------
+    /* ---------------- EMAIL LOGIN ---------------- */
     const handleEmailLogin = async (data: any) => {
         try {
             await signin(data).unwrap()
             toast.success("Login success")
             router.push("/admin")
-            router.refresh()
             reset()
         } catch {
             toast.error("Invalid credentials")
         }
     }
 
-    // -----------------------
-    // OTP Login (FINAL CLEAN VERSION)
-    // -----------------------
+    /* ---------------- OTP LOGIN ---------------- */
     const handleOtpLogin = async (data: any) => {
         try {
-            // STEP 1 → SEND OTP
             if (!otpStep) {
                 setUsername(data.username)
-
                 await sendOTP({ username: data.username }).unwrap()
-
                 toast.success("OTP sent")
                 setOtpStep(true)
                 reset()
                 return
             }
 
-            // STEP 2 → VERIFY OTP
-            await verifyOTP({
-                username,
-                otp: data.otp
-            }).unwrap()
-
+            await verifyOTP({ username, otp: data.otp }).unwrap()
             toast.success("OTP verified")
             router.push("/admin")
             reset()
-
-        } catch (err) {
-            console.log(err)
+        } catch {
             toast.error("OTP failed")
         }
     }
 
-    // -----------------------
-    // Forget password
-    // -----------------------
+    /* ---------------- FORGET ---------------- */
     const handleForget = async () => {
         try {
             await forgetPass({ username }).unwrap()
@@ -332,15 +69,28 @@ const Login = () => {
         }
     }
 
+    /* ======================================================= */
+
     return (
-        <div className="container d-flex justify-content-center align-items-center min-vh-100 bg-light">
-            <div className="card shadow p-4" style={{ maxWidth: 400, width: "100%" }}>
+        <div style={styles.bg}>
 
-                <h4 className="text-center fw-bold mb-4">
-                    {mode === "email" ? "Login" : "Login with OTP"}
-                </h4>
+            {/* glow blobs */}
+            <div style={{ ...styles.blob, ...styles.blob1 }} />
+            <div style={{ ...styles.blob, ...styles.blob2 }} />
 
-                {/* ---------------- EMAIL LOGIN ---------------- */}
+            <div style={styles.card}>
+
+                {/* HEADER */}
+                <div className="text-center mb-4">
+                    <h3 className="fw-bold mb-1">Welcome Back</h3>
+                    <small className="text-muted">
+                        {mode === "email" && "Login with email"}
+                        {mode === "otp" && "Login with OTP"}
+                        {mode === "forget" && "Reset password"}
+                    </small>
+                </div>
+
+                {/* ================= EMAIL ================= */}
                 {mode === "email" && (
                     <form onSubmit={handleSubmit(handleEmailLogin)}>
 
@@ -348,7 +98,7 @@ const Login = () => {
                             {...register("email")}
                             type="email"
                             className="form-control mb-3"
-                            placeholder="Email"
+                            placeholder="Email address"
                         />
 
                         <input
@@ -358,22 +108,25 @@ const Login = () => {
                             placeholder="Password"
                         />
 
-                        <button className="btn btn-primary w-100 mb-3">
-                            Login
+                        <button
+                            className="btn btn-primary w-100 mb-3"
+                            disabled={signing}
+                        >
+                            {signing ? "Signing..." : "Login"}
                         </button>
 
-                        <div className="d-flex justify-content-between mb-3">
+                        <div className="d-flex gap-2 mb-3">
                             <button
                                 type="button"
-                                className="btn btn-outline-secondary btn-sm"
+                                className="btn btn-outline-secondary w-50"
                                 onClick={() => setMode("otp")}
                             >
-                                Use OTP
+                                OTP Login
                             </button>
 
                             <button
                                 type="button"
-                                className="btn btn-link btn-sm"
+                                className="btn btn-outline-danger w-50"
                                 onClick={() => setMode("forget")}
                             >
                                 Forgot?
@@ -382,17 +135,15 @@ const Login = () => {
 
                         <button
                             type="button"
-                            className="btn btn-outline-dark w-100"
-                            onClick={() => {
-                                window.location.href = `${APP_URL}/api/auth/google`
-                            }}
+                            className="btn btn-dark w-100"
+                            onClick={() => router.push("/register")}
                         >
-                            Continue with Google
+                            Create Account
                         </button>
                     </form>
                 )}
 
-                {/* ---------------- OTP LOGIN ---------------- */}
+                {/* ================= OTP ================= */}
                 {mode === "otp" && (
                     <form onSubmit={handleSubmit(handleOtpLogin)}>
 
@@ -430,7 +181,7 @@ const Login = () => {
                     </form>
                 )}
 
-                {/* ---------------- FORGET ---------------- */}
+                {/* ================= FORGET ================= */}
                 {mode === "forget" && (
                     <>
                         <input
@@ -443,7 +194,7 @@ const Login = () => {
                             className="btn btn-primary w-100 mb-3"
                             onClick={handleForget}
                         >
-                            Send Link
+                            Send Reset Link
                         </button>
 
                         <button
@@ -460,3 +211,51 @@ const Login = () => {
 }
 
 export default Login
+
+
+/* ================= STYLES ================= */
+
+const styles = {
+    bg: {
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative" as const,
+        overflow: "hidden",
+        background: "linear-gradient(#2A7B9B,#C7EBD0,#CFCFCF)"
+    },
+
+    card: {
+        width: "100%",
+        maxWidth: 420,
+        padding: 30,
+        borderRadius: 20,
+        backdropFilter: "blur(14px)",
+        background: "rgba(207,207,207,100)",
+        boxShadow: "0 25px 60px rgba(0,0,0,0.45)"
+    },
+
+    blob: {
+        position: "absolute" as const,
+        borderRadius: "50%",
+        filter: "blur(100px)",
+        opacity: 0.6
+    },
+
+    blob1: {
+        width: 350,
+        height: 350,
+        background: "#3b82f6",
+        top: -80,
+        left: -80
+    },
+
+    blob2: {
+        width: 300,
+        height: 300,
+        background: "#9333ea",
+        bottom: -80,
+        right: -80
+    }
+}
