@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useState } from "react"
 import { toast } from "react-toastify"
+import { useRouter } from "next/navigation"
 
 const userSchema = z.object({
     name: z.string().min(2, "Name is required"),
@@ -17,6 +18,7 @@ const userSchema = z.object({
 type UserType = z.infer<typeof userSchema>
 
 export default function Register() {
+    const router = useRouter()
     const [signup] = useSignupMutation()
     const [loading, setLoading] = useState(false)
 
@@ -35,6 +37,7 @@ export default function Register() {
             await signup(data).unwrap()
             reset()
             toast.success("Registered successfully")
+            router.push("/login")
         } catch (err) {
             console.error(err)
             toast.error("Registration failed due to already email mobile exist")

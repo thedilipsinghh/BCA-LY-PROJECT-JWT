@@ -6,7 +6,7 @@ const Footer = () => {
             <div className="container text-center text-md-left">
                 <div className="row text-center text-md-left">
                     <div className="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
-                        <h5 className="text-uppercase mb-4 font-weight-bold text-primary">AuthPractice</h5>
+                        <h5 className="text-uppercase mb-4 font-weight-bold text-primary">AUTHSYSYSTEM</h5>
                         <p>Providing secure and reliable authentication solutions for modern web applications.</p>
                     </div>
 
